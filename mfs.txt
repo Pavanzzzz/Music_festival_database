@@ -1,0 +1,94 @@
+CREATE DATABASE music_festival_management_db;
+
+USE music_festival_management_db;
+
+CREATE TABLE artists (
+    artist_id INT PRIMARY KEY,
+    artist_name VARCHAR(100),
+    genre VARCHAR(50),
+    country VARCHAR(50)
+);
+
+CREATE TABLE stages (
+    stage_id INT PRIMARY KEY,
+    stage_name VARCHAR(100),
+    capacity INT,
+    location VARCHAR(100)
+);
+
+CREATE TABLE events (
+    event_id INT PRIMARY KEY,
+    event_name VARCHAR(100),
+    event_date DATE,
+    stage_id INT,
+    FOREIGN KEY (stage_id) REFERENCES stages(stage_id)
+);
+
+CREATE TABLE performances (
+    performance_id INT PRIMARY KEY,
+    artist_id INT,
+    event_id INT,
+    performance_time VARCHAR(20),
+    duration_minutes INT,
+    FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+    FOREIGN KEY (event_id) REFERENCES events(event_id)
+);
+
+CREATE TABLE attendees (
+    attendee_id INT PRIMARY KEY,
+    attendee_name VARCHAR(100),
+    email VARCHAR(100),
+    city VARCHAR(50)
+);
+
+CREATE TABLE tickets (
+    ticket_id INT PRIMARY KEY,
+    attendee_id INT,
+    event_id INT,
+    ticket_type VARCHAR(50),
+    ticket_price DECIMAL(10,2),
+    FOREIGN KEY (attendee_id) REFERENCES attendees(attendee_id),
+    FOREIGN KEY (event_id) REFERENCES events(event_id)
+);
+
+INSERT INTO artists VALUES
+(1, 'DJ Arjun', 'EDM', 'India'),
+(2, 'The Beats', 'Rock', 'USA'),
+(3, 'Melody Crew', 'Pop', 'UK'),
+(4, 'Rhythm Kings', 'Hip Hop', 'Canada'),
+(5, 'Soul Wave', 'Jazz', 'Australia');
+
+INSERT INTO stages VALUES
+(101, 'Main Stage', 5000, 'Ground A'),
+(102, 'Rock Arena', 3000, 'Ground B'),
+(103, 'EDM Zone', 4000, 'Ground C');
+
+INSERT INTO events VALUES
+(201, 'Summer Blast', '2026-06-10', 101),
+(202, 'Rock Night', '2026-06-11', 102),
+(203, 'EDM Fiesta', '2026-06-12', 103);
+
+INSERT INTO performances VALUES
+(301, 1, 203, '08:00 PM', 90),
+(302, 2, 202, '07:00 PM', 120),
+(303, 3, 201, '06:30 PM', 75),
+(304, 4, 201, '09:00 PM', 60),
+(305, 5, 202, '05:00 PM', 80);
+
+INSERT INTO attendees VALUES
+(401, 'Rahul', 'rahul@gmail.com', 'Hyderabad'),
+(402, 'Sneha', 'sneha@gmail.com', 'Vizag'),
+(403, 'Kiran', 'kiran@gmail.com', 'Guntur'),
+(404, 'Teja', 'teja@gmail.com', 'Vijayawada'),
+(405, 'Anjali', 'anjali@gmail.com', 'Chennai');
+
+INSERT INTO tickets VALUES
+(501, 401, 201, 'VIP', 5000.00),
+(502, 402, 202, 'Regular', 2500.00),
+(503, 403, 203, 'VIP', 5500.00),
+(504, 404, 201, 'Regular', 3000.00),
+(505, 405, 202, 'Premium', 4000.00);
+
+SELECT *
+FROM tickets
+WHERE ticket_price > 3000;
