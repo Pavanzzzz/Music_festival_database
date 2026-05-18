@@ -1,0 +1,211 @@
+mysql> use mms
+Database changed
+mysql> show tables;
++---------------+
+| Tables_in_mms |
++---------------+
+| artists       |
+| attendees     |
+| events        |
+| performances  |
+| stages        |
+| tickets       |
++---------------+
+6 rows in set (0.01 sec)
+
+mysql> -- Display all tickets with price greater than 3000
+mysql> 
+mysql> SELECT *
+    -> FROM tickets
+    -> WHERE ticket_price > 3000;
++-----------+-------------+----------+-------------+--------------+
+| ticket_id | attendee_id | event_id | ticket_type | ticket_price |
++-----------+-------------+----------+-------------+--------------+
+|       501 |         401 |      201 | VIP         |      5000.00 |
+|       503 |         403 |      203 | VIP         |      5500.00 |
+|       505 |         405 |      202 | Premium     |      4000.00 |
++-----------+-------------+----------+-------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display artists from India
+mysql> 
+mysql> SELECT *
+    -> FROM artists
+    -> WHERE country = 'India';
++-----------+-------------+-------+---------+
+| artist_id | artist_name | genre | country |
++-----------+-------------+-------+---------+
+|         1 | DJ Arjun    | EDM   | India   |
++-----------+-------------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> -- Display performances with duration greater than or equal to 80 minutes
+mysql> 
+mysql> SELECT *
+    -> FROM performances
+    -> WHERE duration_minutes >= 80;
++----------------+-----------+----------+------------------+------------------+
+| performance_id | artist_id | event_id | performance_time | duration_minutes |
++----------------+-----------+----------+------------------+------------------+
+|            301 |         1 |      203 | 08:00 PM         |               90 |
+|            302 |         2 |      202 | 07:00 PM         |              120 |
+|            305 |         5 |      202 | 05:00 PM         |               80 |
++----------------+-----------+----------+------------------+------------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display tickets with price between 2500 and 5000
+mysql> 
+mysql> SELECT *
+    -> FROM tickets
+    -> WHERE ticket_price BETWEEN 2500 AND 5000;
++-----------+-------------+----------+-------------+--------------+
+| ticket_id | attendee_id | event_id | ticket_type | ticket_price |
++-----------+-------------+----------+-------------+--------------+
+|       501 |         401 |      201 | VIP         |      5000.00 |
+|       502 |         402 |      202 | Regular     |      2500.00 |
+|       504 |         404 |      201 | Regular     |      3000.00 |
+|       505 |         405 |      202 | Premium     |      4000.00 |
++-----------+-------------+----------+-------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Count the number of artists in each genre
+mysql> 
+mysql> SELECT genre, COUNT(*) AS total_artists
+    -> FROM artists
+    -> GROUP BY genre;
++---------+---------------+
+| genre   | total_artists |
++---------+---------------+
+| EDM     |             1 |
+| Rock    |             1 |
+| Pop     |             1 |
+| Hip Hop |             1 |
+| Jazz    |             1 |
++---------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Find the average ticket price for each ticket type
+mysql> 
+mysql> SELECT ticket_type, AVG(ticket_price) AS average_price
+    -> FROM tickets
+    -> GROUP BY ticket_type;
++-------------+---------------+
+| ticket_type | average_price |
++-------------+---------------+
+| VIP         |   5250.000000 |
+| Regular     |   2750.000000 |
+| Premium     |   4000.000000 |
++-------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display event IDs having more than one ticket booking
+mysql> 
+mysql> SELECT event_id, COUNT(ticket_id) AS total_tickets
+    -> FROM tickets
+    -> GROUP BY event_id
+    -> HAVING COUNT(ticket_id) > 1;
++----------+---------------+
+| event_id | total_tickets |
++----------+---------------+
+|      201 |             2 |
+|      202 |             2 |
++----------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display all tickets ordered by highest ticket price
+mysql> 
+mysql> SELECT *
+    -> FROM tickets
+    -> ORDER BY ticket_price DESC;
++-----------+-------------+----------+-------------+--------------+
+| ticket_id | attendee_id | event_id | ticket_type | ticket_price |
++-----------+-------------+----------+-------------+--------------+
+|       503 |         403 |      203 | VIP         |      5500.00 |
+|       501 |         401 |      201 | VIP         |      5000.00 |
+|       505 |         405 |      202 | Premium     |      4000.00 |
+|       504 |         404 |      201 | Regular     |      3000.00 |
+|       502 |         402 |      202 | Regular     |      2500.00 |
++-----------+-------------+----------+-------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display attendee name, event name, and ticket price
+mysql> 
+mysql> SELECT attendee_name, event_name, ticket_price
+    -> FROM attendees
+    -> JOIN tickets
+    -> ON attendees.attendee_id = tickets.attendee_id
+    -> JOIN events
+    -> ON tickets.event_id = events.event_id;
++---------------+--------------+--------------+
+| attendee_name | event_name   | ticket_price |
++---------------+--------------+--------------+
+| Rahul         | Summer Blast |      5000.00 |
+| Teja          | Summer Blast |      3000.00 |
+| Sneha         | Rock Night   |      2500.00 |
+| Anjali        | Rock Night   |      4000.00 |
+| Kiran         | EDM Fiesta   |      5500.00 |
++---------------+--------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display artist name, event name, and performance time
+mysql> 
+mysql> SELECT artist_name, event_name, performance_time
+    -> FROM artists
+    -> JOIN performances
+    -> ON artists.artist_id = performances.artist_id
+    -> JOIN events
+    -> ON performances.event_id = events.event_id;
++--------------+--------------+------------------+
+| artist_name  | event_name   | performance_time |
++--------------+--------------+------------------+
+| Melody Crew  | Summer Blast | 06:30 PM         |
+| Rhythm Kings | Summer Blast | 09:00 PM         |
+| The Beats    | Rock Night   | 07:00 PM         |
+| Soul Wave    | Rock Night   | 05:00 PM         |
+| DJ Arjun     | EDM Fiesta   | 08:00 PM         |
++--------------+--------------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display stage name and event name
+mysql> 
+mysql> SELECT stage_name, event_name
+    -> FROM stages
+    -> JOIN events
+    -> ON stages.stage_id = events.stage_id;
++------------+--------------+
+| stage_name | event_name   |
++------------+--------------+
+| Main Stage | Summer Blast |
+| Rock Arena | Rock Night   |
+| EDM Zone   | EDM Fiesta   |
++------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Display artist name, genre, and event name for Rock genre artists
+mysql> 
+mysql> SELECT artist_name, genre, event_name
+    -> FROM artists
+    -> JOIN performances
+    -> ON artists.artist_id = performances.artist_id
+    -> JOIN events
+    -> ON performances.event_id = events.event_id
+    -> WHERE genre = 'Rock';
++-------------+-------+------------+
+| artist_name | genre | event_name |
++-------------+-------+------------+
+| The Beats   | Rock  | Rock Night |
++-------------+-------+------------+
+1 row in set (0.00 sec)
+
+mysql> Terminal close -- exit!
