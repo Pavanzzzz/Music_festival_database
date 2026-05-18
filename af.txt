@@ -1,0 +1,106 @@
+mysql> use bs1
+Database changed
+mysql> CREATE TABLE artists (
+    ->     artist_id INT PRIMARY KEY,
+    ->     artist_name VARCHAR(100),
+    ->     email VARCHAR(100),
+    ->     city VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CREATE TABLE art_categories (
+    ->     category_id INT PRIMARY KEY,
+    ->     category_name VARCHAR(50),
+    ->     description VARCHAR(200)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE artworks (
+    ->     artwork_id INT PRIMARY KEY,
+    ->     artwork_title VARCHAR(100),
+    ->     artwork_type VARCHAR(50),
+    ->     price DECIMAL(10,2),
+    ->     artist_id INT,
+    ->     category_id INT,
+    ->     FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+    ->     FOREIGN KEY (category_id) REFERENCES art_categories(category_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> CREATE TABLE visitors (
+    ->     visitor_id INT PRIMARY KEY,
+    ->     visitor_name VARCHAR(100),
+    ->     phone VARCHAR(15),
+    ->     city VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE visitors (
+    ->     visitor_id INT PRIMARY KEY,
+    ->     visitor_name VARCHAR(100),
+    ->     phone VARCHAR(15),
+    ->     city VARCHAR(50)
+    -> );
+ERROR 1050 (42S01): Table 'visitors' already exists
+mysql> CREATE TABLE purchases (
+    ->     purchase_id INT PRIMARY KEY,
+    ->     visitor_id INT,
+    ->     artwork_id INT,
+    ->     purchase_date DATE,
+    ->     payment_amount DECIMAL(10,2),
+    ->     FOREIGN KEY (visitor_id) REFERENCES visitors(visitor_id),
+    ->     FOREIGN KEY (artwork_id) REFERENCES artworks(artwork_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> 
+mysql> INSERT INTO artists VALUES
+    -> (1, 'Ravi Kumar', 'ravi@gmail.com', 'Hyderabad'),
+    -> (2, 'Sneha Reddy', 'sneha@gmail.com', 'Vizag'),
+    -> (3, 'Aman Verma', 'aman@gmail.com', 'Delhi'),
+    -> (4, 'Priya Sharma', 'priya@gmail.com', 'Mumbai'),
+    -> (5, 'Karthik', 'karthik@gmail.com', 'Chennai');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> INSERT INTO art_categories VALUES
+    -> (101, 'Painting', 'Canvas and watercolor paintings'),
+    -> (102, 'Sculpture', 'Stone and clay sculptures'),
+    -> (103, 'Photography', 'Nature and portrait photography'),
+    -> (104, 'Digital Art', 'Modern digital illustrations');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> INSERT INTO artworks VALUES
+    -> (1001, 'Sunset Bliss', 'Watercolor', 12000.00, 1, 101),
+    -> (1002, 'Stone Warrior', 'Clay Sculpture', 18000.00, 2, 102),
+    -> (1003, 'Nature Lens', 'Photography', 9000.00, 3, 103),
+    -> (1004, 'Cyber Dreams', 'Digital Painting', 25000.00, 4, 104),
+    -> (1005, 'Village Life', 'Oil Painting', 15000.00, 5, 101);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> INSERT INTO visitors VALUES
+    -> (201, 'Arjun', '9876543210', 'Guntur'),
+    -> (202, 'Sai', '9876543211', 'Vijayawada'),
+    -> (203, 'Rahul', '9876543212', 'Hyderabad'),
+    -> (204, 'Teja', '9876543213', 'Vizag'),
+    -> (205, 'Kiran', '9876543214', 'Tirupati');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> INSERT INTO purchases VALUES
+    -> (5001, 201, 1001, '2026-05-01', 12000.00),
+    -> (5002, 202, 1002, '2026-05-03', 18000.00),
+    -> (5003, 203, 1003, '2026-05-05', 9000.00),
+    -> (5004, 204, 1004, '2026-05-07', 25000.00),
+    -> (5005, 205, 1005, '2026-05-10', 15000.00);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> Terminal close -- exit!

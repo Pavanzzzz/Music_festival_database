@@ -1,0 +1,179 @@
+mysql> use bs1
+Database changed
+mysql> SELECT * 
+    -> FROM artists;
++-----------+--------------+-------------------+-----------+
+| artist_id | artist_name  | email             | city      |
++-----------+--------------+-------------------+-----------+
+|         1 | Ravi Kumar   | ravi@gmail.com    | Hyderabad |
+|         2 | Sneha Reddy  | sneha@gmail.com   | Vizag     |
+|         3 | Aman Verma   | aman@gmail.com    | Delhi     |
+|         4 | Priya Sharma | priya@gmail.com   | Mumbai    |
+|         5 | Karthik      | karthik@gmail.com | Chennai   |
++-----------+--------------+-------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT artwork_title, price
+    -> FROM artworks
+    -> WHERE price > 10000;
++---------------+----------+
+| artwork_title | price    |
++---------------+----------+
+| Sunset Bliss  | 12000.00 |
+| Stone Warrior | 18000.00 |
+| Cyber Dreams  | 25000.00 |
+| Village Life  | 15000.00 |
++---------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT visitor_name, city
+    -> FROM visitors
+    -> WHERE city = 'Hyderabad';
++--------------+-----------+
+| visitor_name | city      |
++--------------+-----------+
+| Rahul        | Hyderabad |
++--------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * 
+    -> FROM art_categories;
++-------------+---------------+---------------------------------+
+| category_id | category_name | description                     |
++-------------+---------------+---------------------------------+
+|         101 | Painting      | Canvas and watercolor paintings |
+|         102 | Sculpture     | Stone and clay sculptures       |
+|         103 | Photography   | Nature and portrait photography |
+|         104 | Digital Art   | Modern digital illustrations    |
++-------------+---------------+---------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT artwork_title, artist_name
+    -> FROM artworks
+    -> JOIN artists
+    -> ON artworks.artist_id = artists.artist_id;
++---------------+--------------+
+| artwork_title | artist_name  |
++---------------+--------------+
+| Sunset Bliss  | Ravi Kumar   |
+| Stone Warrior | Sneha Reddy  |
+| Nature Lens   | Aman Verma   |
+| Cyber Dreams  | Priya Sharma |
+| Village Life  | Karthik      |
++---------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT visitor_name, artwork_title, purchase_date
+    -> FROM purchases
+    -> JOIN visitors
+    -> ON purchases.visitor_id = visitors.visitor_id
+    -> JOIN artworks
+    -> ON purchases.artwork_id = artworks.artwork_id;
++--------------+---------------+---------------+
+| visitor_name | artwork_title | purchase_date |
++--------------+---------------+---------------+
+| Arjun        | Sunset Bliss  | 2026-05-01    |
+| Sai          | Stone Warrior | 2026-05-03    |
+| Rahul        | Nature Lens   | 2026-05-05    |
+| Teja         | Cyber Dreams  | 2026-05-07    |
+| Kiran        | Village Life  | 2026-05-10    |
++--------------+---------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT artwork_title, category_name
+    -> FROM artworks
+    -> JOIN art_categories
+    -> ON artworks.category_id = art_categories.category_id;
++---------------+---------------+
+| artwork_title | category_name |
++---------------+---------------+
+| Sunset Bliss  | Painting      |
+| Village Life  | Painting      |
+| Stone Warrior | Sculpture     |
+| Nature Lens   | Photography   |
+| Cyber Dreams  | Digital Art   |
++---------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT artist_name, artwork_title, price
+    -> FROM artists
+    -> JOIN artworks
+    -> ON artists.artist_id = artworks.artist_id
+    -> WHERE price > 15000;
++--------------+---------------+----------+
+| artist_name  | artwork_title | price    |
++--------------+---------------+----------+
+| Sneha Reddy  | Stone Warrior | 18000.00 |
+| Priya Sharma | Cyber Dreams  | 25000.00 |
++--------------+---------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT artist_name, COUNT(artwork_id) AS total_artworks
+    -> FROM artists
+    -> JOIN artworks
+    -> ON artists.artist_id = artworks.artist_id
+    -> GROUP BY artist_name;
++--------------+----------------+
+| artist_name  | total_artworks |
++--------------+----------------+
+| Ravi Kumar   |              1 |
+| Sneha Reddy  |              1 |
+| Aman Verma   |              1 |
+| Priya Sharma |              1 |
+| Karthik      |              1 |
++--------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT category_name, AVG(price) AS average_price
+    -> FROM artworks
+    -> JOIN art_categories
+    -> ON artworks.category_id = art_categories.category_id
+    -> GROUP BY category_name;
++---------------+---------------+
+| category_name | average_price |
++---------------+---------------+
+| Painting      |  13500.000000 |
+| Sculpture     |  18000.000000 |
+| Photography   |   9000.000000 |
+| Digital Art   |  25000.000000 |
++---------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT artwork_title, price
+    -> FROM artworks
+    -> WHERE price = (
+    ->     SELECT MAX(price)
+    ->     FROM artworks
+    -> );
++---------------+----------+
+| artwork_title | price    |
++---------------+----------+
+| Cyber Dreams  | 25000.00 |
++---------------+----------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> SELECT visitor_name, payment_amount
+    -> FROM visitors
+    -> JOIN purchases
+    -> ON visitors.visitor_id = purchases.visitor_id
+    -> WHERE payment_amount > (
+    ->     SELECT AVG(payment_amount)
+    ->     FROM purchases
+    -> );
++--------------+----------------+
+| visitor_name | payment_amount |
++--------------+----------------+
+| Sai          |       18000.00 |
+| Teja         |       25000.00 |
++--------------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> Terminal close -- exit!
